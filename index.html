@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      width: 300px;
+      height: 600px;
+      background-color: antiquewhite;
+
+    }
+    #game {
+      width: 225px;
+      display: block;
+      margin: auto;
+    }
+    .panel {
+      width: 300px;
+      height: 200px;
+      background-color: aqua;
+    }
+
+
+    .card {
+      width: 50px;
+      height: 90px;
+      transform-style: preserve-3d;
+      position: relative;
+      transition: all 0.5s;
+      display: inline-block;
+    }
+
+    .close {
+      transform: rotateY(180deg);
+    }
+
+    .front {
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: absolute;
+    }
+
+    .back {
+      width: 100%;
+      height: 100%;
+      background-image: url(./cards/Red_back.jpg);
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: absolute;
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="game"></div>
+    <div class="panel">
+      <h3>翻牌遊戲</h3>
+      <p>分數: </p>
+      <p>時間: </p>
+      <button>開始</button>
+      <button>結束</button>
+      <br>
+      <h1>待開發?????</h1>
+    </div>
+  </div>
+  <script src="./jquery-3.5.1.min.js"></script>
+  <script>
+    const totalCards = 16
+
+    for (let i = 0; i < totalCards; i++) {
+      $('#game').append(`
+        <div class="card close">
+          <div class="back"></div>
+          <div class="front"></div>
+        </div>
+      `)
+
+      const number = i % (totalCards / 2) + 1
+      $('.card').eq(i).find('.front').css('background-image', `url(./cards/${number}S.jpg)`)
+      $('.card').eq(i).attr('data-card', number)
+
+      const target = Math.floor(Math.random() * $('.card').length)
+      $('.card').eq(target).insertAfter($('.card').eq(i))
+    }
+
+    $('#game').on('click', '.card', function () {
+      if ($('.card:not(.close)').length < 2) {
+        $(this).removeClass('close')
+      }
+
+      if ($('.card:not(.close)').length == 2) {
+        if ($('.card:not(.close)').eq(0).attr('data-card') == $('.card:not(.close)').eq(1).attr('data-card')) {
+          $('.card:not(.close)').fadeTo(800, 0).addClass('clear')
+        }
+
+        setTimeout(() => {
+          $('.card:not(.close)').addClass('close')
+        }, 1000);
+      }
+
+      if ($('.clear').length == totalCards) {
+        setTimeout(() => {
+          alert('過關')
+        }, 1000);
+      }
+    })
+  </script>
+</body>
+
+</html>
